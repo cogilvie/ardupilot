@@ -4,7 +4,8 @@
     CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_ERLEBRAIN2 ||   \
     CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_BH ||           \
     CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_DARK ||         \
-    CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_PXFMINI
+    CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_PXFMINI ||      \
+    CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_QUADPI
 #include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -77,7 +78,7 @@ static uint16_t RcChnGpioTbl[RCIN_RPI_CHN_NUM] = {
 #define RCIN_RPI_TIMER_BASE      0x7e003004
 
 #define RCIN_RPI_DMA_SRC_INC     (1<<8)
-#define RCIN_RPI_DMA_DEST_INC    (1<<4) 
+#define RCIN_RPI_DMA_DEST_INC    (1<<4)
 #define RCIN_RPI_DMA_NO_WIDE_BURSTS  (1<<26)
 #define RCIN_RPI_DMA_WAIT_RESP   (1<<3)
 #define RCIN_RPI_DMA_D_DREQ      (1<<6)
@@ -392,7 +393,7 @@ void RCInput_RPI::init_DMA()
     dma_reg[RCIN_RPI_DMA_CS | RCIN_RPI_DMA_CHANNEL << 8] = RCIN_RPI_DMA_INT | RCIN_RPI_DMA_END;
     dma_reg[RCIN_RPI_DMA_CONBLK_AD | RCIN_RPI_DMA_CHANNEL << 8] = reinterpret_cast<uintptr_t>(con_blocks->get_page(con_blocks->_phys_pages, 0));//Set first control block address
     dma_reg[RCIN_RPI_DMA_DEBUG | RCIN_RPI_DMA_CHANNEL << 8] = 7;                      // clear debug error flags
-    dma_reg[RCIN_RPI_DMA_CS | RCIN_RPI_DMA_CHANNEL << 8] = 0x10880001;                // go, mid priority, wait for outstanding writes    
+    dma_reg[RCIN_RPI_DMA_CS | RCIN_RPI_DMA_CHANNEL << 8] = 0x10880001;                // go, mid priority, wait for outstanding writes
 }
 
 

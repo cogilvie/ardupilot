@@ -342,7 +342,19 @@
     #define HAL_OPTFLOW_PX4FLOW_I2C_BUS 0
 
     #define HAL_HAVE_GETTIME_SETTIME 1
-
+#elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_QUADPI
+    #define HAL_INS_LSM9DS0_I2C_BUS 1
+    #define HAL_INS_LSM9DS0_G_I2C_ADDR 0x6b
+    #define HAL_INS_LSM9DS0_A_I2C_ADDR 0x19
+    #define HAL_COMPASS_LSM303D_I2C_ADDR 0x1e
+    #define HAL_BARO_DEFAULT HAL_BARO_BMP085
+    #define HAL_BARO_BMP085_BUS 1
+    #define HAL_BARO_BMP085_I2C_ADDR 0x77
+    #define HAL_GPIO_A_LED_PIN        24
+    #define HAL_GPIO_B_LED_PIN        25
+    #define HAL_GPIO_C_LED_PIN        16
+    #define HAL_GPIO_LED_ON           LOW
+    #define HAL_GPIO_LED_OFF          LOW
 #else
     #error "no Linux board subtype set"
 #endif
