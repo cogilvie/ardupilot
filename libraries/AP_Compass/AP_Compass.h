@@ -134,7 +134,7 @@ public:
     void per_motor_calibration_end(void) {
         _per_motor.calibration_end();
     }
-    
+
     void start_calibration_all(bool retry=false, bool autosave=false, float delay_sec=0.0f, bool autoreboot = false);
 
     void cancel_calibration_all();
@@ -173,7 +173,7 @@ public:
 
     const Vector3f &get_offdiagonals(uint8_t i) const { return _state[i].offdiagonals; }
     const Vector3f &get_offdiagonals(void) const { return get_offdiagonals(get_primary()); }
-    
+
     /// Sets the initial location used to get declination
     ///
     /// @param  latitude             GPS Latitude.
@@ -253,7 +253,7 @@ public:
     void set_voltage(float voltage) {
         _per_motor.set_voltage(voltage);
     }
-    
+
     /// Returns True if the compasses have been configured (i.e. offsets saved)
     ///
     /// @returns                    True if compass has been configured
@@ -313,7 +313,7 @@ public:
             _learn.set((int8_t)type);
         }
     }
-    
+
     // return maximum allowed compass offsets
     uint16_t get_offsets_max(void) const {
         return (uint16_t)_offset_max.get();
@@ -372,11 +372,12 @@ private:
         DRIVER_SITL     =13,
         DRIVER_MAG3110  =14,
         DRIVER_IST8308  = 15,
-		DRIVER_RM3100   =16,
+		    DRIVER_RM3100   =16,
+        DRIVER_LSM303DLHC =17,
     };
 
     bool _driver_enabled(enum DriverType driver_type);
-    
+
     // backend objects
     AP_Compass_Backend *_backends[COMPASS_MAX_BACKEND];
     uint8_t     _backend_count;
@@ -418,7 +419,7 @@ private:
 
     // automatic compass orientation on calibration
     AP_Int8     _rotate_auto;
-    
+
     // throttle expressed as a percentage from 0 ~ 1.0, used for motor compensation
     float       _thr;
 
@@ -469,7 +470,7 @@ private:
 
     // per-motor compass compensation
     Compass_PerMotor _per_motor{*this};
-    
+
     // if we want HIL only
     bool _hil_mode:1;
 
@@ -477,7 +478,7 @@ private:
 
     // mask of driver types to not load. Bit positions match DEVTYPE_ in backend
     AP_Int32 _driver_type_mask;
-    
+
     AP_Int8 _filter_range;
 
     CompassLearn *learn;

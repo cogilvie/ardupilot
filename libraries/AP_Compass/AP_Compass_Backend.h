@@ -58,7 +58,8 @@ public:
         DEVTYPE_MAG3110  = 0x0E,
         DEVTYPE_SITL  = 0x0F,
         DEVTYPE_IST8308 = 0x10,
-		DEVTYPE_RM3100 = 0x11,
+		    DEVTYPE_RM3100 = 0x11,
+        DEVTYPE_LSM303DLHC = 0x12,
     };
 
 
@@ -107,7 +108,7 @@ protected:
 
     // get board orientation (for SITL)
     enum Rotation get_board_orientation(void) const;
-    
+
     // access to frontend
     Compass &_compass;
 
@@ -116,11 +117,11 @@ protected:
 
     // Check that the compass field is valid by using a mean filter on the vector length
     bool field_ok(const Vector3f &field);
-    
+
     uint32_t get_error_count() const { return _error_count; }
 private:
     void apply_corrections(Vector3f &mag, uint8_t i);
-    
+
     // mean field length for range filter
     float _mean_field_length;
     // number of dropped samples. Not used for now, but can be usable to choose more reliable sensor
