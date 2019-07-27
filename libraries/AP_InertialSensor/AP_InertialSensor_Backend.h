@@ -75,7 +75,7 @@ public:
 
     // notify of a fifo reset
     void notify_fifo_reset(void);
-    
+
     /*
       device driver IDs. These are used to fill in the devtype field
       of the device ID, which shows up as INS*ID* parameters to
@@ -108,6 +108,7 @@ public:
         DEVTYPE_INS_ICM20649 = 0x2E,
         DEVTYPE_INS_ICM20602 = 0x2F,
         DEVTYPE_INS_ICM20601 = 0x30,
+        DEVTYPE_L3GD20H      = 0x31,
     };
 
 protected:
@@ -179,7 +180,7 @@ protected:
 
     // update the sensor rate for FIFO sensors
     void _update_sensor_rate(uint16_t &count, uint32_t &start_us, float &rate_hz) const;
-    
+
     // set accelerometer max absolute offset for calibration
     void _set_accel_max_abs_offset(uint8_t instance, float offset);
 
@@ -193,7 +194,7 @@ protected:
     void _set_accel_raw_sample_rate(uint8_t instance, uint16_t rate_hz) {
         _imu._accel_raw_sample_rates[instance] = rate_hz;
     }
-    
+
     // get gyroscope raw sample rate
     float _gyro_raw_sample_rate(uint8_t instance) const {
         return _imu._gyro_raw_sample_rates[instance];
@@ -204,7 +205,7 @@ protected:
     void _set_gyro_raw_sample_rate(uint8_t instance, uint16_t rate_hz) {
         _imu._gyro_raw_sample_rates[instance] = rate_hz;
     }
-    
+
     // publish a temperature value
     void _publish_temperature(uint8_t instance, float temperature);
 
@@ -219,7 +220,7 @@ protected:
 
     // increment gyro error_count
     void _inc_gyro_error_count(uint8_t instance);
-    
+
     // backend unique identifier or -1 if backend doesn't identify itself
     int16_t _id = -1;
 
@@ -285,7 +286,7 @@ protected:
     */
     void notify_accel_fifo_reset(uint8_t instance);
     void notify_gyro_fifo_reset(uint8_t instance);
-    
+
     // note that each backend is also expected to have a static detect()
     // function which instantiates an instance of the backend sensor
     // driver if the sensor is available

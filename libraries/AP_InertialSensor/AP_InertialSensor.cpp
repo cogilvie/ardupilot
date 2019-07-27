@@ -15,6 +15,7 @@
 #include "AP_InertialSensor_Backend.h"
 #include "AP_InertialSensor_HIL.h"
 #include "AP_InertialSensor_L3G4200D.h"
+#include "AP_InertialSensor_L3GD20H.h"
 #include "AP_InertialSensor_LSM9DS0.h"
 #include "AP_InertialSensor_LSM9DS1.h"
 #include "AP_InertialSensor_Invensense.h"
@@ -694,7 +695,7 @@ AP_InertialSensor::detect_backends(void)
         } \
         probe_count++; \
 } while (0)
-    
+
     if (_hil_mode) {
         ADD_BACKEND(AP_InertialSensor_HIL::detect(*this));
         return;
@@ -767,18 +768,18 @@ AP_InertialSensor::detect_backends(void)
                                                     hal.spi->get_device("bmi055_g"),
                                                     ROTATION_ROLL_180_YAW_90));
         break;
-        
+
     case AP_BoardConfig::PX4_BOARD_SP01:
         _fast_sampling_mask.set_default(1);
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_MPU9250_EXT_NAME), ROTATION_NONE));
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_MPU9250_NAME), ROTATION_NONE));
         break;
-        
+
     case AP_BoardConfig::PX4_BOARD_PIXHAWK_PRO:
         _fast_sampling_mask.set_default(3);
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_ICM20608_NAME), ROTATION_ROLL_180_YAW_90));
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_MPU9250_NAME), ROTATION_ROLL_180_YAW_90));
-        break;		
+        break;
 
     case AP_BoardConfig::PX4_BOARD_PHMINI:
         // PHMINI uses ICM20608 on the ACCEL_MAG device and a MPU9250 on the old MPU6000 CS line
@@ -793,7 +794,7 @@ AP_InertialSensor::detect_backends(void)
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_ICM20608_AM_NAME), ROTATION_ROLL_180_YAW_90));
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_MPU9250_NAME), ROTATION_ROLL_180_YAW_90));
         break;
-        
+
     case AP_BoardConfig::PX4_BOARD_PH2SLIM:
         _fast_sampling_mask.set_default(1);
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_MPU9250_NAME), ROTATION_YAW_270));
@@ -813,7 +814,7 @@ AP_InertialSensor::detect_backends(void)
                                                       ROTATION_YAW_90,
                                                       ROTATION_YAW_90));
         break;
-        
+
     case AP_BoardConfig::VRX_BOARD_BRAIN54:
         _fast_sampling_mask.set_default(7);
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_MPU60x0_NAME), ROTATION_YAW_180));
@@ -831,7 +832,7 @@ AP_InertialSensor::detect_backends(void)
     case AP_BoardConfig::VRX_BOARD_UBRAIN52:
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_MPU60x0_NAME), ROTATION_YAW_180));
         break;
-        
+
     case AP_BoardConfig::PX4_BOARD_PCNC1:
         _add_backend(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_MPU60x0_NAME), ROTATION_ROLL_180));
         break;
@@ -862,7 +863,7 @@ AP_InertialSensor::detect_backends(void)
 #elif HAL_INS_DEFAULT == HAL_INS_AERO
     ADD_BACKEND(AP_InertialSensor_BMI160::probe(*this, hal.spi->get_device("bmi160")));
 #elif HAL_INS_DEFAULT == HAL_INS_RST
-    ADD_BACKEND(AP_InertialSensor_RST::probe(*this, hal.spi->get_device(HAL_INS_RST_G_NAME), 
+    ADD_BACKEND(AP_InertialSensor_RST::probe(*this, hal.spi->get_device(HAL_INS_RST_G_NAME),
                                              hal.spi->get_device(HAL_INS_RST_A_NAME),
                                              HAL_INS_DEFAULT_G_ROTATION,
                                              HAL_INS_DEFAULT_A_ROTATION));
@@ -871,10 +872,8 @@ AP_InertialSensor::detect_backends(void)
 #elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_CHIBIOS_OMNIBUSF7V2
     ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device("mpu6000"), ROTATION_NONE));
     ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device("mpu6500"), ROTATION_YAW_90));
-// #elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_QUADPI
-//     ADD_BACKEND(AP_InertialSensor_LSM9DS0::probe(*this,
-//                                                   hal.i2c_mgr->get_device(HAL_INS_LSM9DS0_I2C_BUS, HAL_INS_LSM9DS0_G_I2C_ADDR),
-//                                                   hal.i2c_mgr->get_device(HAL_INS_LSM9DS0_I2C_BUS, HAL_INS_LSM9DS0_A_I2C_ADDR)));
+#elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_QUADPI
+    ADD_BACKEND(AP_InertialSensor_L3GD20H::probe(*this, hal.i2c_mgr->get_device(HAL_INS_L3GD20H_I2C_BUS, HAL_INS_L3GD20H_I2C_ADDR)));
 #elif HAL_INS_DEFAULT == HAL_INS_NONE
     // no INS device
 #else
@@ -1067,7 +1066,7 @@ bool AP_InertialSensor::accel_calibrated_ok_all() const
             return false;
         }
     }
-    
+
     // check calibrated accels matches number of accels (no unused accels should have offsets or scaling)
     if (get_accel_count() < INS_MAX_INSTANCES) {
         for (uint8_t i=get_accel_count(); i<INS_MAX_INSTANCES; i++) {
@@ -1342,7 +1341,7 @@ void AP_InertialSensor::update(void)
     }
 
     _last_update_usec = AP_HAL::micros();
-    
+
     _have_sample = false;
 }
 
@@ -1766,7 +1765,7 @@ void AP_InertialSensor::_acal_save_calibrations()
         _accel_offset[i].set_and_save(Vector3f());
         _accel_scale[i].set_and_save(Vector3f());
     }
-    
+
     Vector3f aligned_sample;
     Vector3f misaligned_sample;
     switch(_trim_option) {
@@ -1889,7 +1888,7 @@ MAV_RESULT AP_InertialSensor::simple_accel_cal()
     bool converged[INS_MAX_INSTANCES];
     const float accel_convergence_limit = 0.05;
     Vector3f rotated_gravity(0, 0, -GRAVITY_MSS);
-    
+
     // exit immediately if calibration is already in progress
     if (_calibrating) {
         return MAV_RESULT_TEMPORARILY_REJECTED;
@@ -1913,13 +1912,13 @@ MAV_RESULT AP_InertialSensor::simple_accel_cal()
 
     // get the rotated gravity vector which will need to be applied to the offsets
     rotated_gravity.rotate_inverse(saved_orientation);
-    
+
     // save existing accel offsets
     for (uint8_t k=0; k<num_accels; k++) {
         saved_offsets[k] = _accel_offset[k];
         saved_scaling[k] = _accel_scale[k];
     }
-    
+
     // remove existing accel offsets and scaling
     for (uint8_t k=0; k<num_accels; k++) {
         _accel_offset[k].set(Vector3f());
