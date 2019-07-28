@@ -108,7 +108,8 @@ public:
         DEVTYPE_INS_ICM20649 = 0x2E,
         DEVTYPE_INS_ICM20602 = 0x2F,
         DEVTYPE_INS_ICM20601 = 0x30,
-        DEVTYPE_L3GD20H      = 0x31,
+        DEVTYPE_GYR_L3GD20H  = 0x31,
+        DEVTYPE_ACC_LSM303DLHC = 0x32,
     };
 
 protected:

@@ -34,4 +34,5 @@ private:
 
     // gyro instance
     uint8_t _gyro_instance;
+};
 #endif

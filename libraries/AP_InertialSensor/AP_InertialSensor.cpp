@@ -24,6 +24,7 @@
 #include "AP_InertialSensor_BMI055.h"
 #include "AP_InertialSensor_BMI088.h"
 #include "AP_InertialSensor_Invensensev2.h"
+#include "AP_InertialSensor_LSM303DLHC.h"
 
 /* Define INS_TIMING_DEBUG to track down scheduling issues with the main loop.
  * Output is on the debug console. */
@@ -863,7 +864,7 @@ AP_InertialSensor::detect_backends(void)
 #elif HAL_INS_DEFAULT == HAL_INS_AERO
     ADD_BACKEND(AP_InertialSensor_BMI160::probe(*this, hal.spi->get_device("bmi160")));
 #elif HAL_INS_DEFAULT == HAL_INS_RST
-    ADD_BACKEND(AP_InertialSensor_RST::probe(*this, hal.spi->get_device(HAL_INS_RST_G_NAME),
+    ADD_BACKEND(AP_InertialSensor_RST::probe(*AP_InertialSensor_LSM303DLHCthis, hal.spi->get_device(HAL_INS_RST_G_NAME),
                                              hal.spi->get_device(HAL_INS_RST_A_NAME),
                                              HAL_INS_DEFAULT_G_ROTATION,
                                              HAL_INS_DEFAULT_A_ROTATION));
@@ -874,6 +875,7 @@ AP_InertialSensor::detect_backends(void)
     ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device("mpu6500"), ROTATION_YAW_90));
 #elif CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_LINUX_QUADPI
     ADD_BACKEND(AP_InertialSensor_L3GD20H::probe(*this, hal.i2c_mgr->get_device(HAL_INS_L3GD20H_I2C_BUS, HAL_INS_L3GD20H_I2C_ADDR)));
+    ADD_BACKEND(AP_InertialSensor_LSM303DLHC::probe(*this, hal.i2c_mgr->get_device(HAL_INS_LSM303DLHC_I2C_BUS, HAL_INS_LSM303DLHC_I2C_ADDR)));
 #elif HAL_INS_DEFAULT == HAL_INS_NONE
     // no INS device
 #else
